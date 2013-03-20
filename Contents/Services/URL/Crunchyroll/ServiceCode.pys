@@ -17,65 +17,44 @@ def MetadataObjectForURL(url):
 	return
 
 ####################################################################################################
-def info(url):
+def MediaObjectsForURL(url):
+		
+	MediaObjects = []	
 	
 	#Split the URL to get the media_id
 	media_id = url.split('-')[-1]
 	
+	#resolution lookup table
+	reslookup = {'SD':'176', '480P':'480', '720P':'720', '1080P':'720', 'Ask':'Ask'}
+	
+	#Make the API call 
 	fields = "media.episode_number,media.name,media.description,media.url,media.stream_data"
 	options = {'session_id':'bkb6y05hmwqzcy6zarllfnk6nd1gagy3', 'version':API_VERSION, 'locale':API_LOCALE, 'media_id':media_id, 'fields':fields} 
 	request = JSON.ObjectFromURL(API_URL+"/info.0.json", values=options, cacheTime=0, headers=API_HEADERS)
 	Log.Debug("Crunchyroll.bundle ----> info request: "+str(request))
+	
 	if request['error'] is False:	
 		if request['data']['stream_data'] is not None:
-			for stream in request['data']['stream_data']['streams']:
-				if stream['quality'] == 'high':
-					stream_url = stream['url']
-					Log.Debug("Crunchyroll.bundle ----> stream url is: "+str(stream_url))
-				else:
-					continue
-		else:
-			stream_url = None 
-		
-	elif request['error'] is True:
-		stream_url = None
-
-	return stream_url
-
-####################################################################################################
-def MediaObjectsForURL(url):
-	
-	#get stream url
-	stream_url = info(url)
-	
-	MediaObjects = []
-	
-	if Prefs['quality'] == "720P":
-		MediaObjects.append(
-			MediaObject(
-				parts = [PartObject(key=Callback(PlayVideo, url=stream_url))],
-				video_resolution = 720,
-				audio_channels = 2,
-				protocol = 'hls',
-				container = 'mpegts',
-				video_codec = VideoCodec.H264,
-				audio_codec = AudioCodec.AAC,
-				aspect_ratio = int(16 / 9),
-				optimized_for_streaming = True,
-				video_frame_rate = str(24p)),)
-	else:
-		MediaObjects.append(
-			MediaObject(
-				parts = [PartObject(key=Callback(PlayVideo, url=stream_url))],
-				video_resolution = 720,
-				audio_channels = 2,
-				protocol = 'hls',
-				container = 'mpegts',
-				video_codec = VideoCodec.H264,
-				audio_codec = AudioCodec.AAC,
-				aspect_ratio = int(16 / 9),
-				optimized_for_streaming = True,
-				video_frame_rate = int(24)),)	
+			for stream in request['data']['stream_data']['streams']:			
+				if stream['quality'] == 'adaptive': continue #Don't know if these streams are useable yet... Just going to skip for now. 
+				if stream['height'] != reslookup[Prefs['quality']] and Prefs['quality'] != 'Ask': continue
+				
+				aspect_ration = float(stream['width']) / float(stream['height'])
+				
+				Log.Debug("Crunchyroll.bundle ----> aspect ration is: "+str(aspect_ration))
+				MediaObjects.append(
+					MediaObject(
+						parts = [PartObject(key=Callback(PlayVideo, url=stream['url']))],
+						video_resolution = int(stream['height']),
+						bitrate = stream['bitrate'], 
+						audio_channels = 2,
+						protocol = 'hls',
+						container = 'mpegts',
+						video_codec = VideoCodec.H264,
+						audio_codec = AudioCodec.AAC,
+						aspect_ratio = str(aspect_ration),
+						optimized_for_streaming = True,
+						video_frame_rate = '24p'),)
 		
 	return MediaObjects
 
