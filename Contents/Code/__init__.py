@@ -89,7 +89,7 @@ def login():
 				return False				
 		
 		#Verify user is premium
-		if Dict['premium_type'] in 'anime|drama':
+		if Dict['premium_type'] in 'anime|drama|manga':
 			Log("Crunchyroll.bundle ----> User is a premium "+str(Dict['premium_type'])+" member.")
 			Dict.Save()
 			return True
@@ -113,7 +113,7 @@ def login():
 			Log("Crunchyroll.bundle ----> Session restart successful. New session_id is: "+ str(Dict['session_id']))
 					
 			#Verify user is premium
-			if Dict['premium_type'] in 'anime|drama':
+			if Dict['premium_type'] in 'anime|drama|manga':
 				Log("Crunchyroll.bundle ----> User is a premium "+str(Dict['premium_type'])+" member.")
 				Dict.Save()
 				return True
@@ -141,7 +141,7 @@ def login():
 		if request['error'] is False:	
 			Log("Crunchyroll.bundle ----> A valid session was detected. Using existing session_id of: "+ str(Dict['session_id']))
 			#Verify user is premium
-			if Dict['premium_type'] in 'anime|drama':
+			if Dict['premium_type'] in 'anime|drama|manga':
 				Log("Crunchyroll.bundle ----> User is a premium "+str(Dict['premium_type'])+" member.")
 				return True
 			else:
