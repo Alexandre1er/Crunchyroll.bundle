@@ -1,35 +1,27 @@
 About
 =====
-This plugin provides access to the Anime and Drama video content available at Crunchyroll.com. This plugin requires the user to have a **premium** crunchyroll.com membership. You can sign up for a free 14-day trial by [clicking here](https://www.crunchyroll.com/freetrial/anime). Free membership accounts will not work.
+This plugin provides access to the Anime, Drama, and Pop video content available at Crunchyroll.com. This plugin requires the user to have a **premium** crunchyroll.com membership. You can sign up for a free 14-day trial by [clicking here](https://www.crunchyroll.com/freetrial). Free membership accounts will not work.
 
-While this plugin is considered stable, there will always be bugs. Please submit bugs via the Github issue tracker on this page. I would also love to hear feedback and/or suggestions. 
-
-Version 2
-=========
-Version 2 is a major step towards stability and reliability. Version 1 of this app was based on Webkit and flash video. While this did work, it was not remotely stable or reliable. Version 2 has been redesigned to use HLS streams which are much more stable and reliable. The video quality is also much better. 
-
-The biggest change, however, is that Version 2 no longer supports *free* Crunchyroll accounts. While i regret this, i would like to point out that none of Crunchyroll's official apps (PS3, Xbox, Apple TV, etc) support free accounts either. The main reason is because of the way Crunchyroll encodes their videos. They don't currently insert ADs with these higher quality streams. When/if they change this in the future, i will certainly update the app to support free accounts again. 
+While this plugin is considered stable, there will always be bugs. Please submit bugs via the [Github issue tracker](https://github.com/MattRK/Crunchyroll.bundle/issues) or in the [official thread on the Plex forums.](https://forums.plex.tv/index.php/topic/73626-rel-crunchyroll-plugin/) I would love to hear feedback and/or suggestions. 
 
 Requirements
 ============
-This plugin **requires** a **premium** Crunchyroll.com account. You can sign up for free trial by [clicking here](https://www.crunchyroll.com/freetrial/anime). When you get the plugin installed you will need to enter your username and password into the preferences section before you will be able to use it. 
+This plugin **requires** a **premium** Crunchyroll.com account. You can sign up for free trial by [clicking here](https://www.crunchyroll.com/freetrial). When you get the plugin installed you will need to enter your username and password into the preferences section before you will be able to use it. 
 
 * **Plex Media Server:**
-	* Version 0.9.7.28 or later (http://www.plexapp.com/getplex/)
-	* Windows & Mac
-	* *Linux & NAS Appliances have not been tested yet. If you have success with these platforms please let me know so i can update this readme.*
+	* Version 0.9.12.3 or later (http://www.plexapp.com/getplex/)
+	* Windows, Mac, Linux or NAS Appliance
 * **Plex Clients:**
-	* Plex Media Center & Plex Home Theater for Windows & Mac
+	* Plex Home Theater
 	* Roku
+	* AppleTV
 	* Windows 8
-	* iOS
-	* Plex/Web in Safari *(Firefox & Chrome do not work)*
-	* PlexConnect for AppleTV
-	* *Android, Windows Phone, LG TVs, Samsung TVs, and Google TV have not been tested yet. If you have success with these clients please let me know so i can update this readme.*
+	* iOS, Android, & Windows Phone
+	* Plex Web in Safari on Mac OSX *(Firefox & Chrome do not work, see FAQ for more info)*
 
 Installation
 ============
-1. Download the latest version of the plugin from [here](https://github.com/MattRK/Crunchyroll.bundle/archive/v2.1.5.zip).
+1. Download the latest version of the plugin from [here](https://github.com/MattRK/Crunchyroll.bundle/archive/v2.2.0.zip).
 
 2. Unzip the content into the PMS plugins directory under your user account.
 	* Windows 7, Vista, or Server 2008: C:\Users\[Your Username]\AppData\Local\Plex Media Server\Plug-ins
@@ -43,7 +35,8 @@ Installation
 
 Known Issues
 ============
-* Some of the Pop videos don't play correctly. This is due to the way Crunchyroll formats those URLs. They are not standardized and as such it is hard to ensure the plugin is able to handle these properly. Fortunately this is not an issue for any of the Anime or Drama videos.  
+* Some of the Pop videos don't play correctly. This is due to the way Crunchyroll formats those URLs. They are not standardized and as such it is hard to ensure the plugin is able to handle these properly. Fortunately this is not an issue for Anime or Drama videos.  
+* Watching an episode using this app does not mark it as "watched" in Plex or in the Crunchyroll queue. This is a limitation of the Plex Media Server API and there are no viable workarounds available. Hopefully Plex will update the API at some point so I can resolve this issue. 
 
 
 Frequently Asked Questions
@@ -52,18 +45,30 @@ Frequently Asked Questions
 
 A: Not all content on Crunchyroll has HD quality videos available. This plugin will try to play content at the resolution you select. However, if a particular resolution is not available, it will play the next highest resolution available. This may also occur shortly after Crunchyroll releases a new video. Sometimes it takes Crunchyroll longer than expected to encode the HD quality videos. During this period of time the plugin only has access to the lower quality streams that have already been encoded. If this is the case, check back later and the HD quality video should be available. 
 
-**Q: How do i hide mature content?**
+**Q: How do I hide mature content?**
 
-A: You can choose what type of content to show by changing the Mature Content Filter setting found under "Account Settings" > "Video Preferences" of the http://www.crunchyroll.com website. 
+A: You can choose what type of content to show by changing the Mature Content Filter setting on the Crunchyroll website. Go to your [Account Settings](https://www.crunchyroll.com/acct/) and click on Video Preferences on the left side. Select the desired option from the Mature Content Filter drop down box. You should restart Plex Media Server after you've made this change.
+
+**Q: I get a "Cannot load M3U8: crossdomain access denied" error when trying to use this plugin on Plex Web.
+
+A: Using this plugin on Plex Web does not "officially" work in any browser but Safari on a Mac OSX. However, some users have had success by un-checking the "Direct Play" box in the Plex Web settings. (Settings > Web > Player > Show Advanced > un-check Direct Play checkbox) 
+
+**Q: How do I change the subtitle language?
+
+A: You can configure this on the Crunchyroll website. Go to your [Account Settings](https://www.crunchyroll.com/acct/) and click on Video Preferences on the left side. Then select the desired language from the "Default Language" drop down box. This will cause all titles, descriptions, and subtitles to be displayed in that language. You should restart Plex Media Server after you've made this change. 
 
 
 Changes
 =======
+v2.2.0
+* The plugin will now respect the language preference you set on the CR website. (Account Settings > Video Preferences > Default Language) All titles, descriptions, and subtitles will be shown in the selected language.
+* Updated the README.md with several new FAQs
+
 v2.1.5
-* Fixed an issue introduced by a recent CR update.
+* Fixed an issue introduced by a recent CR update
 
 v2.1.4
-* Fixed a bug that prevented all-access members from authenticating as premium users. 
+* Fixed a bug that prevented all-access members from authenticating as premium users
 
 v2.1.3
 * Fixed bug from previous release preventing single season shows from displaying properly
@@ -73,26 +78,26 @@ v2.1.2:
 * Added episode counts to each season
 
 v2.1.1:
-* Added a countdown to episode release to upcoming episode descriptions. 
-* Changed the object type of upcoming episodes to play nice with Plex Home Theater.
+* Added a countdown to episode release to upcoming episode descriptions
+* Changed the object type of upcoming episodes to play nice with Plex Home Theater
 
 v2.1.0:
-* Added code to the URL Service to allow Plex/Web, Roku, Windows 8, iOS, & many other Plex clients to use the plugin. 
+* Added code to the URL Service to allow Plex/Web, Roku, Windows 8, iOS, & many other Plex clients to use the plugin
 * Added ClientPlatformExclusions for Chrome & Firefox
-* Added details to the README.md as to clarify which Plex clients are supported.  
+* Added details to the README.md as to clarify which Plex clients are supported
 
 v2.0.2:
 * Added background art throughout the plugin.
-* Changed the search function to only return results that match the user's Crunchyroll premium membership type. This will keep users from getting search results for media they can't access.
+* Changed the search function to only return results that match the user's Crunchyroll premium membership type. This will keep users from getting search results for media they can't access
 
 v2.0.1:
-* Updated the URL service pattern match regex so that it correctly matches URLs being passed by the API.
+* Updated the URL service pattern match regex so that it correctly matches URLs being passed by the API
 
 v2.0.0:
 * Major release
 * The plugin now uses HLS streams instead of webkit based video
 * Free account support has been removed. The plugin now requires a premium membership. 
-* The plugin will only show you content for which you pay. (E.g. Anime members will not be able to see Drama content.)
+* The plugin will only show you content for which you pay (E.g. Anime members will not be able to see Drama content)
 
 v1.2.2:
 * Fixed a bug with the login code that caused problems when trying to resume an invalid session
