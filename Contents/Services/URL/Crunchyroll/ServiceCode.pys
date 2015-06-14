@@ -7,7 +7,6 @@ dateutilparser = dateutil.parser() #Because i have no idea why i can't call date
 API_URL = "https://api.crunchyroll.com"
 API_HEADERS = {'User-Agent':"Mozilla/5.0 (iPhone; iPhone OS 8.3.0; en_US)", 'Host':"api.crunchyroll.com", 'Accept-Encoding':"gzip, deflate", 'Accept':"*/*", 'Content-Type':"application/x-www-form-urlencoded"}
 API_VERSION = "2313.8"
-API_LOCALE = "enUS" 
 API_ACCESS_TOKEN = "QWjz212GspMHH9h"
 API_DEVICE_TYPE = "com.crunchyroll.iphone"
 
@@ -29,7 +28,7 @@ def MetadataObjectForURL(url):
 	
 	#Make the API call 
 	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available_time,media.duration,media.url,media.screenshot_image,image.fwide_url"
-	options = {'session_id':session_id, 'version':API_VERSION, 'locale':API_LOCALE, 'media_id':media_id, 'fields':fields} 
+	options = {'session_id':session_id, 'version':API_VERSION, 'media_id':media_id, 'fields':fields} 
 	request = JSON.ObjectFromURL(API_URL+"/info.0.json", values=options, cacheTime=0, headers=API_HEADERS)
 	
 	if request['error'] is False:	
@@ -128,7 +127,7 @@ def PlayVideo(url):
 	
 	#Make the API call 
 	fields = "media.episode_number,media.name,media.description,media.url,media.stream_data"
-	options = {'session_id':session_id, 'version':API_VERSION, 'locale':API_LOCALE, 'media_id':media_id, 'fields':fields} 
+	options = {'session_id':session_id, 'version':API_VERSION, 'media_id':media_id, 'fields':fields} 
 	request = JSON.ObjectFromURL(API_URL+"/info.0.json", values=options, cacheTime=0, headers=API_HEADERS)
 	
 	if request['error'] is False:	

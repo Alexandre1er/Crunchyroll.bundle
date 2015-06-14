@@ -17,7 +17,6 @@ ICON_NEXT = 'icon_next.png'
 API_URL = "https://api.crunchyroll.com"
 API_HEADERS = {'User-Agent':"Mozilla/5.0 (iPhone; iPhone OS 8.3.0; en_US)", 'Host':"api.crunchyroll.com", 'Accept-Encoding':"gzip, deflate", 'Accept':"*/*", 'Content-Type':"application/x-www-form-urlencoded"}
 API_VERSION = "2313.8"
-API_LOCALE = "enUS" 
 API_ACCESS_TOKEN = "QWjz212GspMHH9h"
 API_DEVICE_TYPE = "com.crunchyroll.iphone"
 
@@ -61,7 +60,7 @@ def login():
 		
 		#Start new session
 		Log("Crunchyroll.bundle ----> Starting new session.")
-		options = {'device_id':device_id, 'device_type':API_DEVICE_TYPE, 'access_token':API_ACCESS_TOKEN, 'version':API_VERSION, 'locale': API_LOCALE}
+		options = {'device_id':device_id, 'device_type':API_DEVICE_TYPE, 'access_token':API_ACCESS_TOKEN, 'version':API_VERSION}
 		request = JSON.ObjectFromURL(API_URL+"/start_session.0.json", values=options, cacheTime=0, headers=API_HEADERS)
 		if request['error'] is False:
 			Dict['session_id'] = request['data']['session_id'] 
@@ -77,7 +76,7 @@ def login():
 			return False
 		else: 
 			Log("Crunchyroll.bundle ----> Logging in the new session we just created.")
-			options = {'session_id':Dict['session_id'], 'password':password, 'account':username, 'version':API_VERSION, 'locale': API_LOCALE}
+			options = {'session_id':Dict['session_id'], 'password':password, 'account':username, 'version':API_VERSION}
 			request = JSON.ObjectFromURL(API_URL+"/login.0.json", values=options, cacheTime=0, headers=API_HEADERS)
 			if request['error'] is False:
 				Dict['auth_token'] = request['data']['auth'] 
@@ -102,7 +101,7 @@ def login():
 		
 		#Re-start new session
 		Log("Crunchyroll.bundle ----> Valid auth token was detected. Restarting session.")
-		options = {'device_id':device_id, 'device_type':API_DEVICE_TYPE, 'access_token':API_ACCESS_TOKEN, 'version':API_VERSION, 'locale': API_LOCALE, 'auth':Dict['auth_token']}
+		options = {'device_id':device_id, 'device_type':API_DEVICE_TYPE, 'access_token':API_ACCESS_TOKEN, 'version':API_VERSION, 'auth':Dict['auth_token']}
 		request = JSON.ObjectFromURL(API_URL+"/start_session.0.json", values=options, cacheTime=0, headers=API_HEADERS)
 		if request['error'] is False:
 			Dict['session_id'] = request['data']['session_id'] 
@@ -465,7 +464,7 @@ def list_media_items(request, series_name, art, season, mode):
 
 ####################################################################################################
 def makeAPIRequest(method, options):
-	values = {'session_id':Dict['session_id'], 'version':API_VERSION, 'locale':API_LOCALE} 
+	values = {'session_id':Dict['session_id'], 'version':API_VERSION} 
 	values.update(options)
 	request = JSON.ObjectFromURL(API_URL+"/"+method+".0.json", values=values, cacheTime=0, headers=API_HEADERS, timeout=120)	
 	return request
