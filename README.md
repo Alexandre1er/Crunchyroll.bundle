@@ -49,11 +49,11 @@ A: Not all content on Crunchyroll has HD quality videos available. This plugin w
 
 A: You can choose what type of content to show by changing the Mature Content Filter setting on the Crunchyroll website. Go to your [Account Settings](https://www.crunchyroll.com/acct/) and click on Video Preferences on the left side. Select the desired option from the Mature Content Filter drop down box. You should restart Plex Media Server after you've made this change.
 
-**Q: I get a "Cannot load M3U8: crossdomain access denied" error when trying to use this plugin on Plex Web.
+**Q: I get a "Cannot load M3U8: crossdomain access denied" error when trying to use this plugin on Plex Web.**
 
 A: Using this plugin on Plex Web does not "officially" work in any browser but Safari on a Mac OSX. However, some users have had success by un-checking the "Direct Play" box in the Plex Web settings. (Settings > Web > Player > Show Advanced > un-check Direct Play checkbox) 
 
-**Q: How do I change the subtitle language?
+**Q: How do I change the subtitle language?**
 
 A: You can configure this on the Crunchyroll website. Go to your [Account Settings](https://www.crunchyroll.com/acct/) and click on Video Preferences on the left side. Then select the desired language from the "Default Language" drop down box. This will cause all titles, descriptions, and subtitles to be displayed in that language. You should restart Plex Media Server after you've made this change. 
 
