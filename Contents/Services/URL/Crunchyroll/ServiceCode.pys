@@ -40,8 +40,8 @@ def MetadataObjectForURL(url):
 		available_in = str(available_delta.days)+" days." if available_delta.days > 0 else str(available_delta.seconds/60/60)+" hours."
 		
 		#Fix Crunchyroll inconsistencies
-		episode_number = '0' if request['data']['episode_number'] == '' else request['data']['episode_number'] #PV episodes have no episode number so we set it to 0. 
-		episode_number = re.sub('\D', '', request['data']['episode_number'])	#Because CR puts letters into some rare episode numbers.
+		request['data']['episode_number'] = re.sub('\D', '', request['data']['episode_number'])	#Because CR puts letters into some rare episode numbers.
+		request['data']['episode_number'] = '0' if request['data']['episode_number'] == '' else request['data']['episode_number'] #PV episodes have no episode number so we set it to 0. 
 		name = "Episode "+str(request['data']['episode_number']) if request['data']['name'] == '' else request['data']['name'] #CR doesn't seem to include episode names for all media so we have to make one up. 	
 		name = "Coming Soon" if request['data']['available'] is False else name #Set the name for upcoming episodes
 		#season = '1' if season == '0' else season #There is a bug which prevents Season 0 from displaying correctly in PMC. This is to help fix that. Will break if a series has both season 0 and 1.  ##########NOT NEEDED IN SERVICE CODE##########
@@ -57,7 +57,7 @@ def MetadataObjectForURL(url):
 				title = name,
 				summary = description,
 				originally_available_at = available_date,
-				index = int(episode_number),
+				index = int(request['data']['episode_number']),
 				show = request['data']['series_name'],
 				thumb = thumb,
 				duration = duration

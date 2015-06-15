@@ -431,8 +431,8 @@ def list_media_items(request, series_name, art, season, mode):
 		available_in = str(available_delta.days)+" days." if available_delta.days > 0 else str(available_delta.seconds/60/60)+" hours."
 		
 		#Fix Crunchyroll inconsistencies & add details for upcoming or unreleased episodes
-		episode_number = '0' if media['episode_number'] == '' else media['episode_number'] #PV episodes have no episode number so we set it to 0. 
-		episode_number = re.sub('\D', '', media['episode_number'])	#Because CR puts letters into some rare episode numbers.
+		media['episode_number'] = re.sub('\D', '', media['episode_number'])	#Because CR puts letters into some rare episode numbers.
+		media['episode_number'] = '0' if media['episode_number'] == '' else media['episode_number'] #PV episodes have no episode number so we set it to 0. 
 		name = "Episode "+str(media['episode_number']) if media['name'] == '' else media['name'] #CR doesn't seem to include episode names for all media so we have to make one up. 	
 		name = "Coming Soon" if media['available'] is False else name #Set the name for upcoming episodes
 		season = '1' if season == '0' else season #There is a bug which prevents Season 0 from displaying correctly in PMC. This is to help fix that. Will break if a series has both season 0 and 1. 
@@ -448,7 +448,7 @@ def list_media_items(request, series_name, art, season, mode):
 				title = name,
 				summary = description,
 				originally_available_at = available_date,
-				index = int(episode_number),
+				index = int(media['episode_number']),
 				show = media['series_name'],
 				season = int(season),
 				thumb = thumb,
