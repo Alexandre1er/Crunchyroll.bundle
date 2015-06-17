@@ -200,7 +200,7 @@ def MainMenu():
 def Queue(title):
 	oc = ObjectContainer(title2 = title)
 	if Prefs['queue_type'] == 'Episodes':
-		fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.url,media.screenshot_image,image.fwide_url,image.fwidestar_url"
+		fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
 		options = {'media_types':"anime|drama", 'fields':fields}
 		request = makeAPIRequest('queue', options)
 		if request['error'] is False:	
@@ -209,7 +209,7 @@ def Queue(title):
 			return ObjectContainer(header = 'Error', message = request['message'])
 
 	elif Prefs['queue_type'] == 'Series':
-		fields = "series.name,series.description,series.series_id,series.rating,series.media_count,series.url,series.publisher_name,series.year,series.portrait_image,image.large_url,series.landscape_image,image.full_url"
+		fields = "series.name,series.description,series.series_id,series.rating,series.media_count,series.url,series.publisher_name,series.year,series.mature,series.portrait_image,image.large_url,series.landscape_image,image.full_url"
 		options = {'media_types':"anime|drama", 'fields':fields}
 		request = makeAPIRequest('queue', options)
 		if request['error'] is False:
@@ -218,6 +218,7 @@ def Queue(title):
 				thumb = '' if (series['portrait_image'] is None or series['portrait_image']['large_url'] is None or 'portrait_image' not in series or 'large_url' not in series['portrait_image']) else series['portrait_image']['large_url'] #Becuase not all series have a thumbnail. 
 				art = '' if (series['landscape_image'] is None or series['landscape_image']['full_url'] is None or 'landscape_image' not in series or 'full_url' not in series['landscape_image']) else series['landscape_image']['full_url'] #Becuase not all series have art. 
 				rating = '0' if (series['rating'] == '' or 'rating' not in series) else series['rating'] #Because Crunchyroll seems to like passing series without ratings
+				content_rating = 'R' if (series['mature'] is True) else '' #Only set the content_rating if the show is mature. 
 				if ('media_count' in series and 'series_id' in series and 'name' in series and series['media_count'] > 0): #Because Crunchyroll seems to like passing series without these things
 					oc.add(TVShowObject(
 						key = Callback(list_collections, series_id = series['series_id'], series_name = series['name'], thumb = thumb, art = art, count = series['media_count']), 
@@ -227,6 +228,7 @@ def Queue(title):
 						studio = series['publisher_name'],
 						thumb = thumb,
 						art = art,
+						content_rating = content_rating,
 						episode_count = int(series['media_count']), 
 						viewed_episode_count = 0,
 						rating = (float(rating) / 10)))
@@ -244,7 +246,7 @@ def Queue(title):
 @route('/video/crunchyroll/history')
 def History(title, offset):
 	oc = ObjectContainer(title2 = title)
-	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.url,media.screenshot_image,image.fwide_url,image.fwidestar_url"
+	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
 	options = {'media_types':"anime|drama", 'fields':fields, 'limit':'64'}
 	request = makeAPIRequest('recently_watched', options)
 	if request['error'] is False:	
@@ -270,7 +272,7 @@ def Channels(title, type):
 @route('/video/crunchyroll/search')
 def Search(query): 
 	oc = ObjectContainer(title2 = 'Search')
-	fields = "series.name,series.description,series.series_id,series.rating,series.media_count,series.url,series.publisher_name,series.year,series.portrait_image,image.large_url,series.landscape_image,image.full_url"
+	fields = "series.name,series.description,series.series_id,series.rating,series.media_count,series.url,series.publisher_name,series.year,series.mature,series.portrait_image,image.large_url,series.landscape_image,image.full_url"
 	options = {'media_types':Dict['premium_type'], 'classes':'series', 'fields':fields, 'limit':'64', 'q':query}
 	request = makeAPIRequest('search', options)
 	if request['error'] is False:
@@ -278,6 +280,7 @@ def Search(query):
 			thumb = '' if (series['portrait_image'] is None or series['portrait_image']['large_url'] is None or 'portrait_image' not in series or 'large_url' not in series['portrait_image']) else series['portrait_image']['large_url'] #Becuase not all series have a thumbnail. 
 			art = '' if (series['landscape_image'] is None or series['landscape_image']['full_url'] is None or 'landscape_image' not in series or 'full_url' not in series['landscape_image']) else series['landscape_image']['full_url'] #Becuase not all series have art. 
 			rating = '0' if (series['rating'] == '' or 'rating' not in series) else series['rating'] #Because Crunchyroll seems to like passing series without ratings
+			content_rating = 'R' if (series['mature'] is True) else '' #Only set the content_rating if the show is mature. 
 			if ('media_count' in series and 'series_id' in series and 'name' in series and series['media_count'] > 0): #Because Crunchyroll seems to like passing series without these things
 				oc.add(TVShowObject(
 					key = Callback(list_collections, series_id = series['series_id'], series_name = series['name'], thumb = thumb, art = art, count = series['media_count']), 
@@ -287,6 +290,7 @@ def Search(query):
 					studio = series['publisher_name'],
 					thumb = thumb,
 					art = art, 
+					content_rating = content_rating,
 					episode_count = int(series['media_count']), 
 					viewed_episode_count = 0,
 					rating = (float(rating) / 10)))
@@ -304,7 +308,7 @@ def Search(query):
 @route('/video/crunchyroll/series')
 def list_series(title, media_type, filter, offset): 
 	oc = ObjectContainer(title2 = title)
-	fields = "series.name,series.description,series.series_id,series.rating,series.media_count,series.url,series.publisher_name,series.year,series.portrait_image,image.large_url,series.landscape_image,image.full_url"
+	fields = "series.name,series.description,series.series_id,series.rating,series.media_count,series.url,series.publisher_name,series.year,series.mature,series.portrait_image,image.large_url,series.landscape_image,image.full_url"
 	options = {'media_type':media_type, 'filter':filter, 'fields':fields, 'limit':'64', 'offset':offset}
 	request = makeAPIRequest('list_series', options)
 	if request['error'] is False:
@@ -313,6 +317,7 @@ def list_series(title, media_type, filter, offset):
 			thumb = '' if (series['portrait_image'] is None or series['portrait_image']['large_url'] is None or 'portrait_image' not in series or 'large_url' not in series['portrait_image']) else series['portrait_image']['large_url'] #Becuase not all series have a thumbnail. 
 			art = '' if (series['landscape_image'] is None or series['landscape_image']['full_url'] is None or 'landscape_image' not in series or 'full_url' not in series['landscape_image']) else series['landscape_image']['full_url'] #Becuase not all series have art. 
 			rating = '0' if (series['rating'] == '' or 'rating' not in series) else series['rating'] #Because Crunchyroll seems to like passing series without ratings
+			content_rating = 'R' if (series['mature'] is True) else '' #Only set the content_rating if the show is mature. 
 			if ('media_count' in series and 'series_id' in series and 'name' in series and series['media_count'] > 0): #Because Crunchyroll seems to like passing series without these things
 				oc.add(TVShowObject(
 					key = Callback(list_collections, series_id = series['series_id'], series_name = series['name'], thumb = thumb, art = art, count = series['media_count']), 
@@ -322,6 +327,7 @@ def list_series(title, media_type, filter, offset):
 					studio = series['publisher_name'],
 					thumb = thumb,
 					art = art,
+					content_rating = content_rating,
 					episode_count = int(series['media_count']), 
 					viewed_episode_count = 0,
 					rating = (float(rating) / 10)))
@@ -402,7 +408,7 @@ def list_collections(series_id, series_name, thumb, art, count):
 def list_media(collection_id, series_name, art, count, complete, season):
 	oc = ObjectContainer(title2 = series_name, art = art)
 	sort = 'asc' if complete is True else 'desc'	
-	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.url,media.screenshot_image,image.fwide_url,image.fwidestar_url"
+	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
 	options = {'collection_id':collection_id, 'fields':fields, 'sort':sort, 'limit':count}
 	request = makeAPIRequest('list_media', options)
 	if request['error'] is False:	
@@ -442,6 +448,7 @@ def list_media_items(request, series_name, art, season, mode):
 		description = "This episode will be available in "+str(available_in) if media['available'] is False else media['description'] #Set the description for upcoming episodes.
 		duration = int(0) if media['available'] is False else int((float(media['duration']) * 1000))
 		url = media['url']+str('&')+Dict['session_id'] #Add the session_id to the URL for the URLService
+		content_rating = 'R' if (media['mature'] is True) else '' #Only set the content_rating if the show is mature. 
 			
 		if media['media_type'] in Dict['premium_type'] or media['media_type'] == 'pop':					
 			oc.add(EpisodeObject(
@@ -454,6 +461,7 @@ def list_media_items(request, series_name, art, season, mode):
 				season = int(season),
 				thumb = thumb,
 				art = art,
+				content_rating = content_rating,
 				duration = duration
 				)
 			)

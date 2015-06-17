@@ -27,7 +27,7 @@ def MetadataObjectForURL(url):
 	media_id = url.split('-')[-1]
 	
 	#Make the API call 
-	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.duration,media.url,media.screenshot_image,image.fwide_url"
+	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.duration,media.url,media.mature,media.screenshot_image,image.fwide_url"
 	options = {'session_id':session_id, 'version':API_VERSION, 'media_id':media_id, 'fields':fields} 
 	request = JSON.ObjectFromURL(API_URL+"/info.0.json", values=options, cacheTime=0, headers=API_HEADERS)
 	
@@ -50,6 +50,7 @@ def MetadataObjectForURL(url):
 		description = "This episode will be available in "+str(available_in) if request['data']['available'] is False else request['data']['description'] #Set the description for upcoming episodes.
 		duration = int(0) if request['data']['available'] is False else int((float(request['data']['duration']) * 1000))
 		#url = media['url']+str('&')+Dict['session_id'] #Add the session_id to the URL for the URLService  ##########NOT NEEDED IN SERVICE CODE##########
+		content_rating = 'R' if (request['data']['mature'] is True) else '' #Only set the content_rating if the show is mature. 
 		
 		try:
 			return EpisodeObject(
@@ -61,6 +62,7 @@ def MetadataObjectForURL(url):
 				show = request['data']['series_name'],
 				thumb = thumb,
 				art = thumb,
+				content_rating = content_rating,
 				duration = duration
 			)
 		except:
