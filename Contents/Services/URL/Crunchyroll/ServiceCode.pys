@@ -60,6 +60,7 @@ def MetadataObjectForURL(url):
 				index = int(request['data']['episode_number']),
 				show = request['data']['series_name'],
 				thumb = thumb,
+				art = thumb,
 				duration = duration
 			)
 		except:

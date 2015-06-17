@@ -386,6 +386,7 @@ def list_collections(series_id, series_name, thumb, art, count):
 					summary = collection['description'],
 					show = str(series_name),
 					thumb = thumb,
+					art = art,
 					episode_count = int(collection['media_count'])))
 				
 				#Check to see if anything was returned
@@ -452,6 +453,7 @@ def list_media_items(request, series_name, art, season, mode):
 				show = media['series_name'],
 				season = int(season),
 				thumb = thumb,
+				art = art,
 				duration = duration
 				)
 			)
