@@ -49,7 +49,6 @@ def MetadataObjectForURL(url):
 		request['data']['episode_number'] = '0' if request['data']['episode_number'] == '' else request['data']['episode_number'] #PV episodes have no episode number so we set it to 0. 
 		name = "Episode "+str(request['data']['episode_number']) if request['data']['name'] == '' else request['data']['name'] #CR doesn't seem to include episode names for all media so we have to make one up. 	
 		name = "Coming Soon" if request['data']['available'] is False else name #Set the name for upcoming episodes
-		season = '1' if season_request['data']['season'] == '0' else season_request['data']['season'] #There is a bug which prevents Season 0 from displaying correctly in PMC. This is to help fix that. Will break if a series has both season 0 and 1. 
 		thumb = "http://static.ak.crunchyroll.com/i/no_image_beta_full.jpg" if request['data']['screenshot_image'] is None else request['data']['screenshot_image']['fwide_url'] #because not all shows have thumbnails.
 		thumb = "http://static.ak.crunchyroll.com/i/coming_soon_beta_fwide.jpg" if request['data']['available'] is False else thumb #Sets the thumbnail to coming soon if the episode isn't available yet.
 		description = "This episode will be available in "+str(available_in) if request['data']['available'] is False else request['data']['description'] #Set the description for upcoming episodes.
@@ -65,7 +64,7 @@ def MetadataObjectForURL(url):
 				originally_available_at = available_date,
 				index = int(request['data']['episode_number']),
 				show = request['data']['series_name'],
-				season = int(season),
+				season = int(season_request['data']['season']),
 				thumb = thumb,
 				art = thumb,
 				content_rating = content_rating,
