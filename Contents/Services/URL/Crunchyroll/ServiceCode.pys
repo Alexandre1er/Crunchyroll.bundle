@@ -23,8 +23,8 @@ def MetadataObjectForURL(url):
 	#Remove the Session ID from the URL
 	url = url.split('&')[0]
 	
-	#Split the URL to get the media_id
-	media_id = url.split('-')[-1]
+	#Search the URL for a string of numbers 5 digits or longer. Most all media IDs are 6 digits. Going to search 1 digit lower just in case there is an older series out there using 4 digit media ids that i don't know about.
+	media_id = ''.join(re.findall(r'(\d{5,})',url))
 	
 	#Make the API call 
 	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.duration,media.url,media.mature,media.screenshot_image,image.fwide_url"
@@ -135,8 +135,8 @@ def PlayVideo(url):
 	#Remove the Session ID and quality from the URL
 	url = url.split('&')[0]
 	
-	#Split the URL to get the media_id
-	media_id = url.split('-')[-1]
+	#Search the URL for a string of numbers 5 digits or longer. Most all media IDs are 6 digits. Going to search 1 digit lower just in case there is an older series out there using 4 digit media ids that i don't know about.
+	media_id = ''.join(re.findall(r'(\d{5,})',url))
 	
 	#Make the API call 
 	fields = "media.episode_number,media.name,media.description,media.url,media.stream_data"
