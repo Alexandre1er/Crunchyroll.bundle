@@ -80,7 +80,7 @@ def MediaObjectsForURL(url):
 
 	return [
 		MediaObject(
-			parts = [PartObject(key=Callback(PlayVideo, url=url+"&ultra"))],
+			parts = [PartObject(key=Callback(PlayVideo, url=url, quality="ultra"))],
 			video_resolution = '1080',
 			audio_channels = 2,
 			protocol = 'hls',
@@ -92,7 +92,7 @@ def MediaObjectsForURL(url):
 			video_frame_rate = '24p'
 		),
 		MediaObject(
-			parts = [PartObject(key=Callback(PlayVideo, url=url+"&high"))],
+			parts = [PartObject(key=Callback(PlayVideo, url=url, quality="high"))],
 			video_resolution = '720',
 			audio_channels = 2,
 			protocol = 'hls',
@@ -104,7 +104,7 @@ def MediaObjectsForURL(url):
 			video_frame_rate = '24p'
 		),
 		MediaObject(
-			parts = [PartObject(key=Callback(PlayVideo, url=url+"&mid"))],
+			parts = [PartObject(key=Callback(PlayVideo, url=url, quality="mid"))],
 			video_resolution = '480',
 			audio_channels = 2,
 			protocol = 'hls',
@@ -116,7 +116,7 @@ def MediaObjectsForURL(url):
 			video_frame_rate = '24p'
 		),
 		MediaObject(
-			parts = [PartObject(key=Callback(PlayVideo, url=url+"&low"))],
+			parts = [PartObject(key=Callback(PlayVideo, url=url, quality="low"))],
 			video_resolution = '360',
 			audio_channels = 2,
 			protocol = 'hls',
@@ -131,13 +131,12 @@ def MediaObjectsForURL(url):
 
 ####################################################################################################
 @indirect
-def PlayVideo(url):
-
-	#Split the URL to get the session_id & quality
-	session_id = url.split('&')[1]
-	quality = url.split('&')[2]
+def PlayVideo(url, quality):
 	
-	#Remove the Session ID and quality from the URL
+	#Split the URL to get the session_id
+	session_id = url.split('&')[1]
+	
+	#Remove the Session ID from the URL
 	url = url.split('&')[0]
 	
 	#Search the URL for a string of numbers 5 digits or longer. Most all media IDs are 6 digits. Going to search 1 digit lower just in case there is an older series out there using 4 digit media ids that i don't know about.
