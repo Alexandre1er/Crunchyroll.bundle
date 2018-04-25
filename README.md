@@ -1,3 +1,7 @@
+End of Life
+====
+This plugin is no longer maintained. As far as i know, it's still fully functional. However, there's no guarantee that it will continue to work. I highly recommend using the official Crunchyroll apps. They all stream in HD now and are actually very good. The Windows 10 app from the Windows Store works great as do the Android & ios mobile apps. I personally use the mobile app with a Google Chromecast. It's easy, cheap, and works every time. If you don't like the official apps, you can also check out [Crunchyroll Kodi/XBMC plugin.](https://github.com/Yoshiofthewire/CrunchyXBMC)
+
 About
 =====
 This plugin provides access to the Anime, Drama, and Pop video content available at Crunchyroll.com. This plugin requires the user to have a **premium** crunchyroll.com membership. You can sign up for a free 14-day trial by [clicking here](https://www.crunchyroll.com/freetrial). Free membership accounts will not work.
