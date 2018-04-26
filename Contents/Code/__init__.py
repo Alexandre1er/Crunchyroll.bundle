@@ -200,7 +200,7 @@ def MainMenu():
 def Queue(title):
 	oc = ObjectContainer(title2 = title)
 	if Prefs['queue_type'] == 'Episodes':
-		fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
+		fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.playhead,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
 		options = {'media_types':"anime|drama", 'fields':fields}
 		request = makeAPIRequest('queue', options)
 		if request['error'] is False:	
@@ -246,7 +246,7 @@ def Queue(title):
 @route('/video/crunchyroll/history')
 def History(title, offset):
 	oc = ObjectContainer(title2 = title)
-	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
+	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.playhead,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
 	options = {'media_types':"anime|drama", 'fields':fields, 'limit':'64'}
 	request = makeAPIRequest('recently_watched', options)
 	if request['error'] is False:	
@@ -408,7 +408,7 @@ def list_collections(series_id, series_name, thumb, art, count):
 def list_media(collection_id, series_name, art, count, complete, season):
 	oc = ObjectContainer(title2 = series_name, art = art)
 	sort = 'asc' if complete is True else 'desc'	
-	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
+	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.playhead,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
 	options = {'collection_id':collection_id, 'fields':fields, 'sort':sort, 'limit':count}
 	request = makeAPIRequest('list_media', options)
 	if request['error'] is False:	
@@ -440,8 +440,28 @@ def list_media_items(request, series_name, art, season, mode):
 		#Fix Crunchyroll inconsistencies & add details for upcoming or unreleased episodes
 		media['episode_number'] = re.sub('\D', '', media['episode_number'])	#Because CR puts letters into some rare episode numbers.
 		media['episode_number'] = '0' if media['episode_number'] == '' else media['episode_number'] #PV episodes have no episode number so we set it to 0. 
-		name = "Episode "+str(media['episode_number']) if media['name'] == '' else media['name'] #CR doesn't seem to include episode names for all media so we have to make one up. 	
-		name = "Coming Soon" if media['available'] is False else name #Set the name for upcoming episodes
+		name = "Episode "+str(media['episode_number']) if media['name'] == '' else media['name'] #CR doesn't seem to include episode names for all media so we have to make one up.
+		if media['available'] is False:
+			#Set the name for upcoming episodes
+			name = "Coming Soon"
+		else:
+			#Prepend an improvised progress indicator
+			progress = float(media['playhead'] / float(media['duration']))
+			progress = 1 if progress > 1 else progress # Cap progress value at 100%, just to be safe
+			progress = 0 if progress < 0 else progress # Also make sure it never goes below 0%
+			name_prefixes = [
+				u'\u2800', # no dots
+				u'\u2840', # ⡀
+				u'\u28c0', # ⣀
+				u'\u28c4', # ⣄
+				u'\u28e4', # ⣤
+				u'\u28e6', # ⣦
+				u'\u28f6', # ⣶
+				u'\u28f7', # ⣷
+				u'\u28ff'  # ⣿
+			]
+			name_prefix = name_prefixes[int(round(progress * (len(name_prefixes)-1)))]
+			name = name_prefix + " " + name
 		thumb = "http://static.ak.crunchyroll.com/i/no_image_beta_full.jpg" if media['screenshot_image'] is None else media['screenshot_image']['fwide_url'] #because not all shows have thumbnails.
 		thumb = "http://static.ak.crunchyroll.com/i/coming_soon_beta_fwide.jpg" if media['available'] is False else thumb #Sets the thumbnail to coming soon if the episode isn't available yet.
 		description = "This episode will be available in "+str(available_in) if media['available'] is False else media['description'] #Set the description for upcoming episodes.
