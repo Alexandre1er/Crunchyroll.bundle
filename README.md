@@ -31,6 +31,7 @@ Installation
 	* Windows 7, Vista, or Server 2008: C:\Users\[Your Username]\AppData\Local\Plex Media Server\Plug-ins
 	* Windows XP, Server 2003, or Home Server: C:\Documents and Settings\[Your Username]\Local Settings\Application Data\Plex Media Server\Plug-ins
 	* Mac/Linux: ~/Library/Application Support/Plex Media Server/Plug-ins
+	* FreeNAS: /var/db/plexdata/Plex Media Server/Plug-ins
 
 3. Rename the unzipped folder from "Crunchyroll.bundle-vx.x.x" to "Crunchyroll.bundle"
 
