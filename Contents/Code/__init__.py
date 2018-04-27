@@ -132,12 +132,12 @@ def login():
 			Dict.Save()
 			return False
 
-	#If we got to this point that means a session exists and it's still valid, we don't need to do anything.
-	elif ('session_id' in Dict and current_datetime < Dict['session_expires']):			
-		#Test to make sure the session still works. (Sometimes sessions just stop working. Not sure why. 
-		options = {'media_id':'615485'}
-		request = makeAPIRequest('info', options)
-		if request['error'] is False:	
+	# If we got to this point that means a session exists and it's still valid, we don't need to do anything.
+	elif ('session_id' in Dict and current_datetime < Dict['session_expires']):
+		# Test to make sure the session still works. (Sometimes sessions just stop working. Not sure why.
+		options = {'media_types':'anime|drama','fields':'media.name'}
+		request = makeAPIRequest('queue', options)
+		if request['error'] is False:
 			Log("Crunchyroll.bundle ----> A valid session was detected. Using existing session_id of: "+ str(Dict['session_id']))
 			#Verify user is premium
 			if Dict['premium_type'] in 'anime|drama|manga':
