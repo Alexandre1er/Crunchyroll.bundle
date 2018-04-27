@@ -419,7 +419,7 @@ def list_media(collection_id, series_name, art, count, complete, season):
 
 ####################################################################################################
 def list_media_items(request, series_name, art, season, mode):
-	items = []
+	oc = ObjectContainer(title2 = series_name, art = art)
 	for media in request:
 		
 		#The following are items to help display Recently Watched and Queue items correctly
@@ -470,7 +470,7 @@ def list_media_items(request, series_name, art, season, mode):
 		content_rating = 'R' if (media['mature'] is True) else '' #Only set the content_rating if the show is mature. 
 			
 		if media['media_type'] in Dict['premium_type'] or media['media_type'] == 'pop':					
-			items.append(EpisodeObject(
+			oc.add(EpisodeObject(
 				url = url,
 				title = name,
 				summary = description,
@@ -486,13 +486,10 @@ def list_media_items(request, series_name, art, season, mode):
 			)
 					
 	#Check to see if anything was returned
-	if len(items) == 0:
-		return ObjectContainer(header = 'No Results', message = 'No results were found')
-
-	if mode == "queue" or mode == "normal":
-		items = list(reversed(items)) #In order for jumping between episodes to work correctly
-
-	return ObjectContainer(title2 = series_name, art = art, objects = items)
+	if len(oc) == 0:
+		return ObjectContainer(header='No Results', message='No results were found')
+	
+	return oc
 
 ####################################################################################################
 def makeAPIRequest(method, options):
