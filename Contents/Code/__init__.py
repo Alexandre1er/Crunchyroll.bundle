@@ -41,7 +41,7 @@ def Start():
 	HTTP.Headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:37.0) Gecko/20100101 Firefox/37.0'
 
 ####################################################################################################
-def login():
+def login(skip_cached = False):
 
 	current_datetime = datetime.datetime.now(dateutil.tz.tzutc())
 	username = Prefs['username']
@@ -56,7 +56,7 @@ def login():
 		device_id = Data.LoadObject("device_id")
 
 	# Check to see if a session_id doesn't exist or if the current auth token is invalid and if so start a new session and log it in.
-	if ('session_id' not in Dict or 'auth_expires' not in Dict or current_datetime > Dict['auth_expires']):
+	if (skip_cached is True or 'session_id' not in Dict or 'auth_expires' not in Dict or current_datetime > Dict['auth_expires']):
 
 		# Start new session
 		Log("Crunchyroll.bundle ----> Starting new session.")
@@ -171,8 +171,13 @@ def login():
 
 ####################################################################################################
 def ValidatePrefs():
-	loginResult = login()
+	loginResult = login(skip_cached = True)
 	Log("Crunchyroll.bundle ----> Login result: " + str(loginResult))
+	if loginResult is False:
+		return ObjectContainer(
+			header = "Failed to log in!",
+			message = "Please check your credentials and try again."
+		)
 
 ####################################################################################################
 @handler('/video/crunchyroll', TITLE, thumb=ICON, art=ART)
