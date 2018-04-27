@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import random, re, string
+import re, string
 import dateutil.tz, dateutil.relativedelta, dateutil.parser
 import datetime
+import uuid
 
 dateutilparser = dateutil.parser() #Because i have no idea why i can't call dateutil.parser.parse() directly... 
 
@@ -48,10 +49,9 @@ def login():
 	
 	#Create unique device_id or retreive the existing device_id
 	if not Data.Exists("device_id"):
-		char_set = string.ascii_letters + string.digits
-		device_id = ''.join(random.sample(char_set,32))
+		device_id = str(uuid.uuid4())
 		Data.SaveObject("device_id", device_id)
-		Log("Crunchyroll.bundle ----> New device_id created. New device_id is: "+ str(device_id))
+		Log("Crunchyroll.bundle ----> New device_id created. New device_id is: "+device_id)
 	else:
 		device_id = Data.LoadObject("device_id")
 	
