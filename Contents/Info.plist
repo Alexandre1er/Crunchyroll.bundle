@@ -7,7 +7,7 @@
 	<key>PlexFrameworkVersion</key>
 	<string>2</string>
 	<key>PlexPluginClass</key>
-	<string>Content</string>	
+	<string>Content</string>
 	<key>PlexClientPlatformExclusions</key>
 	<string>Firefox,Chrome</string>
 	<key>PlexClientPlatforms</key>
