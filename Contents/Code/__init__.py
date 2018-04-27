@@ -381,11 +381,11 @@ def list_collections(series_id, series_name, thumb, art, count):
 	if request['error'] is False:		
 		if len(request['data']) <= 1:
 			for collection in request['data']:
-				return list_media(collection['collection_id'], series_name, art, count, collection['complete'], '1')
+				return list_media(collection['collection_id'], series_name, art, count, '1')
 		else:
 			for collection in request['data']:
 				oc.add(SeasonObject(
-					key = Callback(list_media, collection_id = collection['collection_id'], series_name = series_name, art = art, count = collection['media_count'], complete = collection['complete'], season = collection['season']), 
+					key = Callback(list_media, collection_id = collection['collection_id'], series_name = series_name, art = art, count = collection['media_count'], season = collection['season']),
 					rating_key = collection['collection_id'],
 					index = int(collection['season']), 
 					title = collection['name'],
@@ -405,9 +405,9 @@ def list_collections(series_id, series_name, thumb, art, count):
 	return oc
 ####################################################################################################
 @route('/video/crunchyroll/media')
-def list_media(collection_id, series_name, art, count, complete, season):
+def list_media(collection_id, series_name, art, count, season):
 	oc = ObjectContainer(title2 = series_name, art = art)
-	sort = 'asc' if complete is True else 'desc'	
+	sort = 'asc'
 	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.playhead,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
 	options = {'collection_id':collection_id, 'fields':fields, 'sort':sort, 'limit':count}
 	request = makeAPIRequest('list_media', options)
