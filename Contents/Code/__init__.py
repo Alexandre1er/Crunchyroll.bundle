@@ -385,7 +385,7 @@ def list_collections(series_id, series_name, thumb, art, count):
 		else:
 			for collection in request['data']:
 				oc.add(SeasonObject(
-					key = Callback(list_media, collection_id = collection['collection_id'], series_name = series_name, art = art, count = collection['media_count'], season = collection['season']),
+					key = Callback(list_media, collection_id = collection['collection_id'], collection_name = collection['name'], art = art, count = collection['media_count'], season = collection['season']),
 					rating_key = collection['collection_id'],
 					index = int(collection['season']), 
 					title = collection['name'],
@@ -405,26 +405,23 @@ def list_collections(series_id, series_name, thumb, art, count):
 	return oc
 ####################################################################################################
 @route('/video/crunchyroll/media')
-def list_media(collection_id, series_name, art, count, season):
-	oc = ObjectContainer(title2 = series_name, art = art)
+def list_media(collection_id, collection_name, art, count, season):
 	sort = 'asc'
 	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.playhead,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
 	options = {'collection_id':collection_id, 'fields':fields, 'sort':sort, 'limit':count}
 	request = makeAPIRequest('list_media', options)
 	if request['error'] is False:	
-		return list_media_items(request['data'], series_name, art, season, 'normal')
+		return list_media_items(request['data'], collection_name, art, season, 'normal')
 	elif request['error'] is True:
 		return ObjectContainer(header = 'Error', message = request['message'])
-	return oc
 
 ####################################################################################################
-def list_media_items(request, series_name, art, season, mode):
-	oc = ObjectContainer(title2 = series_name, art = art)
+def list_media_items(request, collection_name, art, season, mode):
+	oc = ObjectContainer(title2 = collection_name, art = art)
 	for media in request:
 		
 		#The following are items to help display Recently Watched and Queue items correctly
 		season = media['collection']['season'] if mode == "history" else season 
-		series_name = media['series']['name'] if (mode == "history" or mode == "queue") else series_name
 		media = media['media'] if mode == "history" else media  #History media is one level deeper in the json string than normal media items. 
 		if mode == "queue" and 'most_likely_media' not in media: #Some queue items don't have most_likely_media so we have to skip them.
 			continue 
