@@ -484,8 +484,8 @@ def list_media_items(request, collection_name, art, season, mode):
 					
 	#Check to see if anything was returned
 	if len(oc) == 0:
-		return ObjectContainer(header='No Results', message='No results were found')
-	
+		return ObjectContainer(header = 'No Results', message = 'No results were found')
+
 	return oc
 
 ####################################################################################################
