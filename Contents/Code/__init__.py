@@ -3,6 +3,7 @@ import re, string
 import dateutil.tz, dateutil.relativedelta, dateutil.parser
 import datetime
 import uuid
+import urllib
 
 dateutilparser = dateutil.parser() # Because i have no idea why i can't call dateutil.parser.parse() directly...
 
@@ -16,10 +17,14 @@ ICON_SEARCH = 'icon-search.png'
 ICON_NEXT = 'icon_next.png'
 
 API_URL = "https://api.crunchyroll.com"
-API_HEADERS = {'User-Agent':"Mozilla/5.0 (iPhone; iPhone OS 8.3.0; en_US)", 'Host':"api.crunchyroll.com", 'Accept-Encoding':"gzip, deflate", 'Accept':"*/*", 'Content-Type':"application/x-www-form-urlencoded"}
+# Fake headers don't seem necessary
+# API_HEADERS = {'User-Agent':"Mozilla/5.0 (iPhone; iPhone OS 8.3.0; en_US)", 'Accept-Encoding':"gzip, deflate", 'Accept':"*/*", 'Content-Type':"application/x-www-form-urlencoded"}
+API_HEADERS = {}
 API_VERSION = "2313.8"
 API_ACCESS_TOKEN = "QWjz212GspMHH9h"
 API_DEVICE_TYPE = "com.crunchyroll.iphone"
+MANGA_API_URL = "https://api-manga.crunchyroll.com"
+MANGA_API_VERSION = "1.0"
 
 ####################################################################################################
 def Start():
@@ -38,7 +43,8 @@ def Start():
 	VideoClipObject.art = R(ART)
 
 	HTTP.CacheTime = CACHE_1HOUR
-	HTTP.Headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:37.0) Gecko/20100101 Firefox/37.0'
+	# HTTP.RandomizeUserAgent('Safari')
+	# HTTP.Headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:37.0) Gecko/20100101 Firefox/37.0'
 
 ####################################################################################################
 def login(skip_cached = False):
@@ -47,21 +53,12 @@ def login(skip_cached = False):
 	username = Prefs['username']
 	password = Prefs['password']
 
-	# Create unique device_id or retreive the existing device_id
-	if not Data.Exists("device_id"):
-		device_id = str(uuid.uuid4())
-		Data.SaveObject("device_id", device_id)
-		Log("Crunchyroll.bundle ----> New device_id created. New device_id is: "+device_id)
-	else:
-		device_id = Data.LoadObject("device_id")
-
 	# Check to see if a session_id doesn't exist or if the current auth token is invalid and if so start a new session and log it in.
 	if (skip_cached is True or 'session_id' not in Dict or 'auth_expires' not in Dict or current_datetime > Dict['auth_expires']):
 
 		# Start new session
 		Log("Crunchyroll.bundle ----> Starting new session.")
-		options = {'device_id':device_id, 'device_type':API_DEVICE_TYPE, 'access_token':API_ACCESS_TOKEN, 'version':API_VERSION}
-		request = JSON.ObjectFromURL(API_URL+"/start_session.0.json", values=options, cacheTime=0, headers=API_HEADERS)
+		request = start_session()
 		if request['error'] is False:
 			Dict['session_id'] = request['data']['session_id']
 			Dict['session_expires'] = (current_datetime + dateutil.relativedelta.relativedelta( hours = +4 ))
@@ -101,8 +98,7 @@ def login(skip_cached = False):
 
 		# Re-start new session
 		Log("Crunchyroll.bundle ----> Valid auth token was detected. Restarting session.")
-		options = {'device_id':device_id, 'device_type':API_DEVICE_TYPE, 'access_token':API_ACCESS_TOKEN, 'version':API_VERSION, 'auth':Dict['auth_token']}
-		request = JSON.ObjectFromURL(API_URL+"/start_session.0.json", values=options, cacheTime=0, headers=API_HEADERS)
+		request = start_session(Dict['auth_token'])
 		if request['error'] is False:
 			Dict['session_id'] = request['data']['session_id']
 			Dict['auth_expires'] = dateutilparser.parse(request['data']['expires'])
@@ -168,6 +164,34 @@ def login(skip_cached = False):
 		Dict.Save()
 		return False
 
+####################################################################################################
+def start_session(auth_token = None):
+	# Retreive the existing device_id or create a new one
+	if not Data.Exists("device_id"):
+		device_id = str(uuid.uuid4())
+		Data.SaveObject("device_id", device_id)
+		Log("Crunchyroll.bundle ----> New device_id created. New device_id is: "+device_id)
+	else:
+		device_id = Data.LoadObject("device_id")
+
+	# Prepare the options
+	options = {'device_id':device_id, 'device_type':API_DEVICE_TYPE, 'access_token':API_ACCESS_TOKEN, 'version':API_VERSION}
+	if auth_token is not None:
+		options['auth'] = auth_token
+
+	if Prefs['session_in_us'] is True:
+		# Use CR Manga API to create a US-based session``
+		Log("Crunchyroll.bundle ----> Creating a session in the US")
+		del options['version']
+		options['api_ver'] = MANGA_API_VERSION
+		query_string = urllib.urlencode(options)
+		ret = JSON.ObjectFromURL(MANGA_API_URL+"/cr_start_session?"+query_string, cacheTime=0, headers=API_HEADERS)
+		Log(str(ret))
+		return ret
+	else:
+		# Create a normal session using the main API
+		Log("Crunchyroll.bundle ----> Creating a session")
+		return JSON.ObjectFromURL(API_URL+"/start_session.0.json", values=options, cacheTime=0, headers=API_HEADERS)
 
 ####################################################################################################
 def ValidatePrefs():
