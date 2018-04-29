@@ -14,7 +14,7 @@ ICON_QUEUE = 'icon-queue.png'
 ICON_LIST = 'icon-list.png'
 ICON_PREFS = 'icon-prefs.png'
 ICON_SEARCH = 'icon-search.png'
-ICON_NEXT = 'icon_next.png'
+ICON_NEXT = 'icon-next.png'
 
 API_URL = "https://api.crunchyroll.com"
 # Fake headers don't seem necessary
