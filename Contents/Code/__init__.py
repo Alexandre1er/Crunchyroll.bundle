@@ -197,8 +197,8 @@ def ValidatePrefs():
 	Log("Crunchyroll.bundle ----> Login result: " + str(loginResult))
 	if loginResult is False:
 		return ObjectContainer(
-			header = "Failed to log in!",
-			message = "Please check your credentials and try again."
+			header = "Failed to log in",
+			message = "Could not log in to Crunchyroll. Please set your login credentials in the Preferences for this channel and try again."
 		)
 
 ####################################################################################################
