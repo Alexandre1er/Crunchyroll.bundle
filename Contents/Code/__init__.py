@@ -217,8 +217,10 @@ def MainMenu():
 		if 'drama' in Dict['premium_type']:
 			oc.add(DirectoryObject(key=Callback(Channels, title = "Drama", type = "drama"), title = "Drama", thumb = R(ICON_LIST)))
 		oc.add(InputDirectoryObject(key=Callback(Search), title = "Search", prompt = "Anime series, drama, etc", thumb = R(ICON_SEARCH)))
+	else:
+		oc.header = "Failed to log in",
+		oc.message = "Could not log in to Crunchyroll. Please set your login credentials in the Preferences for this channel and try again."
 
-	oc.add(PrefsObject(title = 'Preferences', thumb = R(ICON_PREFS)))
 	return oc
 
 ####################################################################################################
