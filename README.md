@@ -23,7 +23,7 @@ This plugin **requires** a **premium** Crunchyroll.com account. You can sign up 
 	* AppleTV
 	* Windows 8
 	* iOS, Android, & Windows Phone
-	* Plex Web in Safari on Mac OSX *(Firefox & Chrome do not work, see FAQ for more info)*
+	* Plex Web
 
 Installation
 ============
@@ -57,7 +57,7 @@ A: You can choose what type of content to show by changing the Mature Content Fi
 
 **Q: I get a "Cannot load M3U8: crossdomain access denied" error when trying to use this plugin on Plex Web.**
 
-A: Using this plugin on Plex Web does not "officially" work in any browser but Safari on a Mac OSX. However, some users have had success by un-checking the "Direct Play" box in the Plex Web settings. (Settings > Web > Player > Show Advanced > un-check Direct Play checkbox)
+A: Try un-checking the "Direct Play" box in the Plex Web settings. (Settings > Web > Player > Show Advanced > un-check Direct Play checkbox)
 
 **Q: How do I change the subtitle language?**
 
@@ -66,6 +66,18 @@ A: You can configure this on the Crunchyroll website. Go to your [Account Settin
 
 Changes
 =======
+v2.3.0
+* Always order episodes within a season from first to last
+* Prepend an improvised progress indicator to episode names. This way, at least the videos marked as watched by other means will be indicated
+* Use season name as collection title when listing season episodes
+* Use a different query (ask for queue) to validate the session. Previously, data for some hardcoded media was being requested, but that call now fails (the media must have been removed)
+* Test new login credentials properly when changing them in the settings
+* Optionally allow tricking CR into creating US-based session
+* Use the correct Next icon in paged listings
+* Use a UUID as device id instead of just random string
+* Removed ClientPlatformExclusions from info.plist. The plugin works just fine for me using Firefox
+* Removed access to Pop video category, which seems to be no longer on CR
+
 v2.2.0
 * The plugin will now respect the language preference you set on the CR website. (Account Settings > Video Preferences > Default Language) All titles, descriptions, and subtitles will be shown in the selected language.
 * Updated the README.md with several new FAQs
