@@ -143,14 +143,14 @@ def login(skip_cached = False):
 				Log("Crunchyroll.bundle ----> User is not premium. Unable to load plugin.")
 				return False
 		elif request['error'] is True:
-			Log("Crunchyroll.bundle ----> Something in the login process went wrong.")
+			Log("Crunchyroll.bundle ----> Something is wrong with the session. Will now delete it and attempt to start a new one.")
 			del Dict['session_id']
 			del Dict['auth_expires']
 			del Dict['premium_type']
 			del Dict['auth_token']
 			del Dict['session_expires']
 			Dict.Save()
-			return False
+			return login(skip_cached)
 
 	# This is here as a catch all in case something gets messed up along the way. Remove Dict variables so we start a new session next time around.
 	else:
@@ -159,10 +159,10 @@ def login(skip_cached = False):
 		del Dict['premium_type']
 		del Dict['auth_token']
 		del Dict['session_expires']
-		Log("Crunchyroll.bundle ----> Something in the login process went wrong.")
+		Log("Crunchyroll.bundle ----> Something in the login process went wrong. Will now delete session data and attempt to start a new one.")
 
 		Dict.Save()
-		return False
+		return login(skip_cached)
 
 ####################################################################################################
 def start_session(auth_token = None):
