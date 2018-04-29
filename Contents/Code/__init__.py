@@ -123,10 +123,10 @@ def login(skip_cached = False):
 			del Dict['premium_type']
 			del Dict['auth_token']
 			del Dict['session_expires']
-			Log("Crunchyroll.bundle ----> Error restarting session. Error message was: "+ str(request['message']))
+			Log("Crunchyroll.bundle ----> Error restarting session. Will now delete session data and attempt to start a new one. Error message was: "+ str(request['message']))
 
 			Dict.Save()
-			return False
+			return login(skip_cached)
 
 	# If we got to this point that means a session exists and it's still valid, we don't need to do anything.
 	elif ('session_id' in Dict and current_datetime < Dict['session_expires']):
@@ -143,7 +143,7 @@ def login(skip_cached = False):
 				Log("Crunchyroll.bundle ----> User is not premium. Unable to load plugin.")
 				return False
 		elif request['error'] is True:
-			Log("Crunchyroll.bundle ----> Something is wrong with the session. Will now delete it and attempt to start a new one.")
+			Log("Crunchyroll.bundle ----> Something is wrong with the session. Will now delete session data and attempt to start a new one.")
 			del Dict['session_id']
 			del Dict['auth_expires']
 			del Dict['premium_type']
