@@ -224,6 +224,9 @@ def MainMenu():
 ####################################################################################################
 @route('/video/crunchyroll/queue')
 def Queue(title):
+	loginResult = login()
+	Log("Crunchyroll.bundle ----> Login result: " + str(loginResult))
+
 	oc = ObjectContainer(title2 = title)
 	if Prefs['queue_type'] == 'Episodes':
 		fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.playhead,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
@@ -271,6 +274,9 @@ def Queue(title):
 ####################################################################################################
 @route('/video/crunchyroll/history')
 def History(title, offset):
+	loginResult = login()
+	Log("Crunchyroll.bundle ----> Login result: " + str(loginResult))
+
 	oc = ObjectContainer(title2 = title)
 	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.playhead,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
 	options = {'media_types':"anime|drama", 'fields':fields, 'limit':'64'}
@@ -297,6 +303,9 @@ def Channels(title, type):
 ####################################################################################################
 @route('/video/crunchyroll/search')
 def Search(query):
+	loginResult = login()
+	Log("Crunchyroll.bundle ----> Login result: " + str(loginResult))
+
 	oc = ObjectContainer(title2 = 'Search')
 	fields = "series.name,series.description,series.series_id,series.rating,series.media_count,series.url,series.publisher_name,series.year,series.mature,series.portrait_image,image.large_url,series.landscape_image,image.full_url"
 	options = {'media_types':Dict['premium_type'], 'classes':'series', 'fields':fields, 'limit':'64', 'q':query}
@@ -333,6 +342,9 @@ def Search(query):
 ####################################################################################################
 @route('/video/crunchyroll/series')
 def list_series(title, media_type, filter, offset):
+	loginResult = login()
+	Log("Crunchyroll.bundle ----> Login result: " + str(loginResult))
+
 	oc = ObjectContainer(title2 = title)
 	fields = "series.name,series.description,series.series_id,series.rating,series.media_count,series.url,series.publisher_name,series.year,series.mature,series.portrait_image,image.large_url,series.landscape_image,image.full_url"
 	options = {'media_type':media_type, 'filter':filter, 'fields':fields, 'limit':'64', 'offset':offset}
@@ -374,6 +386,9 @@ def list_series(title, media_type, filter, offset):
 ####################################################################################################
 @route('/video/crunchyroll/categories')
 def list_categories(title, media_type, filter):
+	loginResult = login()
+	Log("Crunchyroll.bundle ----> Login result: " + str(loginResult))
+
 	oc = ObjectContainer(title2 = title)
 	options = {'media_type':media_type}
 	request = makeAPIRequest('categories', options)
@@ -400,6 +415,9 @@ def list_categories(title, media_type, filter):
 ####################################################################################################
 @route('/video/crunchyroll/collections')
 def list_collections(series_id, series_name, thumb, art, count):
+	loginResult = login()
+	Log("Crunchyroll.bundle ----> Login result: " + str(loginResult))
+
 	oc = ObjectContainer(title2 = series_name, art = art)
 	fields = "collection.collection_id,collection.season,collection.name,collection.description,collection.complete,collection.media_count"
 	options = {'series_id':series_id, 'fields':fields, 'sort':'desc', 'limit':count}
@@ -432,6 +450,9 @@ def list_collections(series_id, series_name, thumb, art, count):
 ####################################################################################################
 @route('/video/crunchyroll/media')
 def list_media(collection_id, collection_name, art, count, season):
+	loginResult = login()
+	Log("Crunchyroll.bundle ----> Login result: " + str(loginResult))
+
 	sort = 'asc'
 	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.free_available,media.free_available_time,media.duration,media.playhead,media.url,media.mature,media.screenshot_image,image.fwide_url,image.fwidestar_url"
 	options = {'collection_id':collection_id, 'fields':fields, 'sort':sort, 'limit':count}
