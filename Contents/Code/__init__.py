@@ -185,9 +185,7 @@ def start_session(auth_token = None):
 		del options['version']
 		options['api_ver'] = MANGA_API_VERSION
 		query_string = urllib.urlencode(options)
-		ret = JSON.ObjectFromURL(MANGA_API_URL+"/cr_start_session?"+query_string, cacheTime=0, headers=API_HEADERS)
-		Log(str(ret))
-		return ret
+		rturn JSON.ObjectFromURL(MANGA_API_URL+"/cr_start_session?"+query_string, cacheTime=0, headers=API_HEADERS)
 	else:
 		# Create a normal session using the main API
 		Log("Crunchyroll.bundle ----> Creating a session")
