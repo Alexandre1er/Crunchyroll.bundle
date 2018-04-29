@@ -10,7 +10,7 @@ While this plugin is considered stable, there will always be bugs. Please submit
 
 Requirements
 ============
-This plugin **requires** a **premium** Crunchyroll.com account. You can sign up for free trial by [clicking here](https://www.crunchyroll.com/freetrial). When you get the plugin installed you will need to enter your username and password into the preferences section before you will be able to use it. 
+This plugin **requires** a **premium** Crunchyroll.com account. You can sign up for free trial by [clicking here](https://www.crunchyroll.com/freetrial). When you get the plugin installed you will need to enter your username and password into the preferences section before you will be able to use it.
 
 * **Plex Media Server:**
 	* Version 0.9.12.3 or later (http://www.plexapp.com/getplex/)
@@ -40,14 +40,14 @@ Installation
 
 Known Issues
 ============
-* Watching an episode using this app does not mark it as "watched" in Plex or in the Crunchyroll queue. This is a limitation of the Plex Media Server API and there are no viable workarounds available. Hopefully Plex will update the API at some point so I can resolve this issue. 
+* Watching an episode using this app does not mark it as "watched" in Plex or in the Crunchyroll queue. This is a limitation of the Plex Media Server API and there are no viable workarounds available. Hopefully Plex will update the API at some point so I can resolve this issue.
 
 
 Frequently Asked Questions
 ==========================
 **Q: I selected 1080P or 720P but the video is played in a lower resolution**
 
-A: Not all content on Crunchyroll has HD quality videos available. This plugin will try to play content at the resolution you select. However, if a particular resolution is not available, it will play the next highest resolution available. This may also occur shortly after Crunchyroll releases a new video. Sometimes it takes Crunchyroll longer than expected to encode the HD quality videos. During this period of time the plugin only has access to the lower quality streams that have already been encoded. If this is the case, check back later and the HD quality video should be available. 
+A: Not all content on Crunchyroll has HD quality videos available. This plugin will try to play content at the resolution you select. However, if a particular resolution is not available, it will play the next highest resolution available. This may also occur shortly after Crunchyroll releases a new video. Sometimes it takes Crunchyroll longer than expected to encode the HD quality videos. During this period of time the plugin only has access to the lower quality streams that have already been encoded. If this is the case, check back later and the HD quality video should be available.
 
 **Q: How do I hide mature content?**
 
@@ -55,11 +55,11 @@ A: You can choose what type of content to show by changing the Mature Content Fi
 
 **Q: I get a "Cannot load M3U8: crossdomain access denied" error when trying to use this plugin on Plex Web.**
 
-A: Using this plugin on Plex Web does not "officially" work in any browser but Safari on a Mac OSX. However, some users have had success by un-checking the "Direct Play" box in the Plex Web settings. (Settings > Web > Player > Show Advanced > un-check Direct Play checkbox) 
+A: Using this plugin on Plex Web does not "officially" work in any browser but Safari on a Mac OSX. However, some users have had success by un-checking the "Direct Play" box in the Plex Web settings. (Settings > Web > Player > Show Advanced > un-check Direct Play checkbox)
 
 **Q: How do I change the subtitle language?**
 
-A: You can configure this on the Crunchyroll website. Go to your [Account Settings](https://www.crunchyroll.com/acct/) and click on Video Preferences on the left side. Then select the desired language from the "Default Language" drop down box. This will cause all titles, descriptions, and subtitles to be displayed in that language. You should restart Plex Media Server after you've made this change. 
+A: You can configure this on the Crunchyroll website. Go to your [Account Settings](https://www.crunchyroll.com/acct/) and click on Video Preferences on the left side. Then select the desired language from the "Default Language" drop down box. This will cause all titles, descriptions, and subtitles to be displayed in that language. You should restart Plex Media Server after you've made this change.
 
 
 Changes
@@ -100,7 +100,7 @@ v2.0.1:
 v2.0.0:
 * Major release
 * The plugin now uses HLS streams instead of webkit based video
-* Free account support has been removed. The plugin now requires a premium membership. 
+* Free account support has been removed. The plugin now requires a premium membership.
 * The plugin will only show you content for which you pay (E.g. Anime members will not be able to see Drama content)
 
 v1.2.2:
@@ -126,4 +126,4 @@ v1.0.0:
 
 Credits
 =======
-I want to thank pgp90 and JeremySH for their awesome plugin that has kept the Plex Anime & Drama community happy for the past few years. When I set out to help improve that plugin I had no idea that it would lead to a complete re-write of the code base. 
+I want to thank pgp90 and JeremySH for their awesome plugin that has kept the Plex Anime & Drama community happy for the past few years. When I set out to help improve that plugin I had no idea that it would lead to a complete re-write of the code base.
