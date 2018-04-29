@@ -218,7 +218,6 @@ def MainMenu():
 			oc.add(DirectoryObject(key=Callback(Channels, title = "Anime", type = "anime"), title = "Anime", thumb = R(ICON_LIST)))
 		if 'drama' in Dict['premium_type']:
 			oc.add(DirectoryObject(key=Callback(Channels, title = "Drama", type = "drama"), title = "Drama", thumb = R(ICON_LIST)))
-		oc.add(DirectoryObject(key=Callback(Channels, title = "Pop", type = "pop"), title = "Pop", thumb = R(ICON_LIST)))
 		oc.add(InputDirectoryObject(key=Callback(Search), title = "Search", prompt = "Anime series, drama, etc", thumb = R(ICON_SEARCH)))
 
 	oc.add(PrefsObject(title = 'Preferences', thumb = R(ICON_PREFS)))
@@ -495,7 +494,7 @@ def list_media_items(request, collection_name, art, season, mode):
 		url = media['url']+str('&')+Dict['session_id'] # Add the session_id to the URL for the URLService
 		content_rating = 'R' if (media['mature'] is True) else '' # Only set the content_rating if the show is mature.
 
-		if media['media_type'] in Dict['premium_type'] or media['media_type'] == 'pop':
+		if media['media_type'] in Dict['premium_type']:
 			oc.add(EpisodeObject(
 				url = url,
 				title = name,

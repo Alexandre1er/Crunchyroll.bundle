@@ -4,7 +4,7 @@ This plugin is no longer maintained. As far as i know, it's still fully function
 
 About
 =====
-This plugin provides access to the Anime, Drama, and Pop video content available at Crunchyroll.com. This plugin requires the user to have a **premium** crunchyroll.com membership. You can sign up for a free 14-day trial by [clicking here](https://www.crunchyroll.com/freetrial). Free membership accounts will not work.
+This plugin provides access to the Anime and Drama video content available at Crunchyroll.com. This plugin requires the user to have a **premium** crunchyroll.com membership. You can sign up for a free 14-day trial by [clicking here](https://www.crunchyroll.com/freetrial). Free membership accounts will not work.
 
 While this plugin is considered stable, there will always be bugs. Please submit bugs via the [Github issue tracker](https://github.com/MattRK/Crunchyroll.bundle/issues) or in the [official thread on the Plex forums.](https://forums.plex.tv/index.php/topic/73626-rel-crunchyroll-plugin/) I would love to hear feedback and/or suggestions. 
 
@@ -40,7 +40,6 @@ Installation
 
 Known Issues
 ============
-* Some of the Pop videos don't play correctly. This is due to the way Crunchyroll formats those URLs. They are not standardized and as such it is hard to ensure the plugin is able to handle these properly. Fortunately this is not an issue for Anime or Drama videos.  
 * Watching an episode using this app does not mark it as "watched" in Plex or in the Crunchyroll queue. This is a limitation of the Plex Media Server API and there are no viable workarounds available. Hopefully Plex will update the API at some point so I can resolve this issue. 
 
 
