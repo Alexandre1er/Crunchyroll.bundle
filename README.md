@@ -1,12 +1,14 @@
-End of Life
-====
-This plugin is no longer maintained. As far as i know, it's still fully functional. However, there's no guarantee that it will continue to work. I highly recommend using the official Crunchyroll apps. They all stream in HD now and are actually very good. The Windows 10 app from the Windows Store works great as do the Android & ios mobile apps. I personally use the mobile app with a Google Chromecast. It's easy, cheap, and works every time. If you don't like the official apps, you can also check out [Crunchyroll Kodi/XBMC plugin.](https://github.com/Yoshiofthewire/CrunchyXBMC)
-
 About
 =====
 This plugin provides access to the Anime and Drama video content available at Crunchyroll.com. This plugin requires the user to have a **premium** crunchyroll.com membership. You can sign up for a free 14-day trial by [clicking here](https://www.crunchyroll.com/freetrial). Free membership accounts will not work.
 
-While this plugin is considered stable, there will always be bugs. Please submit bugs via the [Github issue tracker](https://github.com/MattRK/Crunchyroll.bundle/issues) or in the [official thread on the Plex forums.](https://forums.plex.tv/index.php/topic/73626-rel-crunchyroll-plugin/) I would love to hear feedback and/or suggestions. 
+While this plugin is considered stable, there will always be bugs. Please submit bugs via the [Github issue tracker](https://github.com/rimas-kudelis/Crunchyroll.bundle/issues) or in the [official thread on the Plex forums.](https://forums.plex.tv/index.php/topic/73626-rel-crunchyroll-plugin/) I would love to hear feedback and/or suggestions.
+
+The original author of this plugin is [@MattRK](https://github.com/rimas-kudelis/Crunchyroll.bundle), but at some point he ceased development and expressed his disinterest in continuing it (his End of Life notice is quoted below). Since there were certain things in Matt's last release that were bugging me quite a lot, I decided to roll up my sleeves and fix them myself.
+
+End of Life
+====
+This plugin is no longer maintained. As far as i know, it's still fully functional. However, there's no guarantee that it will continue to work. I highly recommend using the official Crunchyroll apps. They all stream in HD now and are actually very good. The Windows 10 app from the Windows Store works great as do the Android & ios mobile apps. I personally use the mobile app with a Google Chromecast. It's easy, cheap, and works every time. If you don't like the official apps, you can also check out [Crunchyroll Kodi/XBMC plugin.](https://github.com/Yoshiofthewire/CrunchyXBMC)
 
 Requirements
 ============
