@@ -496,9 +496,13 @@ def list_media_items(request, collection_name, art, season, mode):
 			name = "Coming Soon"
 		else:
 			# Prepend an improvised progress indicator
-			progress = float(media['playhead'] / float(media['duration']))
-			progress = 1 if progress > 1 else progress # Cap progress value at 100%, just to be safe
-			progress = 0 if progress < 0 else progress # Also make sure it never goes below 0%
+			if 'playhead' in media.keys():
+				progress = float(media['playhead']) / float(media['duration'])
+				progress = 1 if progress > 1 else progress # Cap progress value at 100%, just to be safe
+				progress = 0 if progress < 0 else progress # Also make sure it never goes below 0%
+			else:
+				progress = 0
+
 			name_prefixes = [
 				u'\u2800', # no dots
 				u'\u2840', # ⡀
