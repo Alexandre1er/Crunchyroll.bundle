@@ -66,6 +66,12 @@ A: You can configure this on the Crunchyroll website. Go to your [Account Settin
 
 Changes
 =======
+v2.3.2
+* Minor changes
+
+v2.3.1
+* Fixed a bug which caused 2.3.0 to actually not work at all
+
 v2.3.0
 * Always order episodes within a season from first to last
 * Prepend an improvised progress indicator to episode names. This way, at least the videos marked as watched by other means will be indicated
