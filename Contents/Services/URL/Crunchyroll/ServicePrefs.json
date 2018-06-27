@@ -22,5 +22,11 @@
 			"Episodes"
 		],
 		"default": "Episodes"
+	},
+	{
+		"id": "session_in_us",
+		"type": "bool",
+		"label": "Unlock US-only Shows",
+		"default": "false"
 	}
 ]

@@ -5,11 +5,10 @@ import datetime
 dateutilparser = dateutil.parser() #Because i have no idea why i can't call dateutil.parser.parse() directly... 
 
 API_URL = "https://api.crunchyroll.com"
-API_HEADERS = {'User-Agent':"Mozilla/5.0 (PLAYSTATION 3; 4.46)", 'Host':"api.crunchyroll.com", 'Accept-Encoding':"gzip, deflate", 'Accept':"*/*", 'Content-Type':"application/x-www-form-urlencoded"}
-API_VERSION = "1.0.1"
-API_LOCALE = "enUS" 
-API_ACCESS_TOKEN = "S7zg3vKx6tRZ0Sf"
-API_DEVICE_TYPE = "com.crunchyroll.ps3"
+API_HEADERS = {'User-Agent':"Mozilla/5.0 (iPhone; iPhone OS 8.3.0; en_US)", 'Host':"api.crunchyroll.com", 'Accept-Encoding':"gzip, deflate", 'Accept':"*/*", 'Content-Type':"application/x-www-form-urlencoded"}
+API_VERSION = "2313.8"
+API_ACCESS_TOKEN = "QWjz212GspMHH9h"
+API_DEVICE_TYPE = "com.crunchyroll.iphone"
 
 ####################################################################################################
 def NormalizeURL(url):
@@ -24,34 +23,52 @@ def MetadataObjectForURL(url):
 	#Remove the Session ID from the URL
 	url = url.split('&')[0]
 	
-	#Split the URL to get the media_id
-	media_id = url.split('-')[-1]
+	#Search the URL for a string of numbers 5 digits or longer. Most all media IDs are 6 digits. Going to search 1 digit lower just in case there is an older series out there using 4 digit media ids that i don't know about.
+	media_id = ''.join(re.findall(r'(\d{5,})',url))
 	
-	#Make the API call 
-	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available_time,media.duration,media.url,media.screenshot_image,image.fwide_url"
-	options = {'session_id':session_id, 'version':API_VERSION, 'locale':API_LOCALE, 'media_id':media_id, 'fields':fields} 
+	#Make the API call for the media info
+	fields = "media.episode_number,media.name,media.description,media.media_type,media.series_name,media.available,media.available_time,media.duration,media.url,media.mature,media.collection_id,media.screenshot_image,image.fwide_url"
+	options = {'session_id':session_id, 'version':API_VERSION, 'media_id':media_id, 'fields':fields} 
 	request = JSON.ObjectFromURL(API_URL+"/info.0.json", values=options, cacheTime=0, headers=API_HEADERS)
 	
-	if request['error'] is False:	
+	if request['error'] is False:
+		#Make the API call for the season info
+		season_options = {'session_id':session_id, 'version':API_VERSION, 'collection_id':request['data']['collection_id'], 'fields':'collection.season'} 
+		season_request = JSON.ObjectFromURL(API_URL+"/info.0.json", values=season_options, cacheTime=0, headers=API_HEADERS)
+	
+	if request['error'] is False and season_request['error'] is False:	
 		#Dates, times, and such
+		current_datetime = datetime.datetime.now(dateutil.tz.tzutc()) 
 		available_datetime = dateutilparser.parse(request['data']['available_time']).astimezone(dateutil.tz.tzlocal()) 
-		available_date = available_datetime.date() 	
+		available_date = available_datetime.date() 
+		available_delta = available_datetime - current_datetime
+		available_in = str(available_delta.days)+" days." if available_delta.days > 0 else str(available_delta.seconds/60/60)+" hours."
 		
 		#Fix Crunchyroll inconsistencies
-		request['data']['episode_number'] = '0' if request['data']['episode_number'] == '' else request['data']['episode_number'] #PV episodes have no episode number so we set it to 0. 
 		request['data']['episode_number'] = re.sub('\D', '', request['data']['episode_number'])	#Because CR puts letters into some rare episode numbers.
+		request['data']['episode_number'] = '0' if request['data']['episode_number'] == '' else request['data']['episode_number'] #PV episodes have no episode number so we set it to 0. 
 		name = "Episode "+str(request['data']['episode_number']) if request['data']['name'] == '' else request['data']['name'] #CR doesn't seem to include episode names for all media so we have to make one up. 	
+		name = "Coming Soon" if request['data']['available'] is False else name #Set the name for upcoming episodes
 		thumb = "http://static.ak.crunchyroll.com/i/no_image_beta_full.jpg" if request['data']['screenshot_image'] is None else request['data']['screenshot_image']['fwide_url'] #because not all shows have thumbnails.
+		thumb = "http://static.ak.crunchyroll.com/i/coming_soon_beta_fwide.jpg" if request['data']['available'] is False else thumb #Sets the thumbnail to coming soon if the episode isn't available yet.
+		description = "This episode will be available in "+str(available_in) if request['data']['available'] is False else request['data']['description'] #Set the description for upcoming episodes.
+		duration = int(0) if request['data']['available'] is False else int((float(request['data']['duration']) * 1000))
+		#url = media['url']+str('&')+Dict['session_id'] #Add the session_id to the URL for the URLService  ##########NOT NEEDED IN SERVICE CODE##########
+		content_rating = 'R' if (request['data']['mature'] is True) else '' #Only set the content_rating if the show is mature. 
+		
 		try:
 			return EpisodeObject(
 				url = request['data']['url'],
 				title = name,
-				summary = request['data']['description'],
+				summary = description,
 				originally_available_at = available_date,
 				index = int(request['data']['episode_number']),
 				show = request['data']['series_name'],
+				season = int(season_request['data']['season']),
 				thumb = thumb,
-				duration = int((float(request['data']['duration']) * 1000))
+				art = thumb,
+				content_rating = content_rating,
+				duration = duration
 			)
 		except:
 			raise Ex.MediaNotAvailable
@@ -63,7 +80,7 @@ def MediaObjectsForURL(url):
 
 	return [
 		MediaObject(
-			parts = [PartObject(key=Callback(PlayVideo, url=url+"&ultra"))],
+			parts = [PartObject(key=Callback(PlayVideo, url=url, quality="ultra"))],
 			video_resolution = '1080',
 			audio_channels = 2,
 			protocol = 'hls',
@@ -75,7 +92,7 @@ def MediaObjectsForURL(url):
 			video_frame_rate = '24p'
 		),
 		MediaObject(
-			parts = [PartObject(key=Callback(PlayVideo, url=url+"&high"))],
+			parts = [PartObject(key=Callback(PlayVideo, url=url, quality="high"))],
 			video_resolution = '720',
 			audio_channels = 2,
 			protocol = 'hls',
@@ -87,7 +104,7 @@ def MediaObjectsForURL(url):
 			video_frame_rate = '24p'
 		),
 		MediaObject(
-			parts = [PartObject(key=Callback(PlayVideo, url=url+"&mid"))],
+			parts = [PartObject(key=Callback(PlayVideo, url=url, quality="mid"))],
 			video_resolution = '480',
 			audio_channels = 2,
 			protocol = 'hls',
@@ -99,7 +116,7 @@ def MediaObjectsForURL(url):
 			video_frame_rate = '24p'
 		),
 		MediaObject(
-			parts = [PartObject(key=Callback(PlayVideo, url=url+"&low"))],
+			parts = [PartObject(key=Callback(PlayVideo, url=url, quality="low"))],
 			video_resolution = '360',
 			audio_channels = 2,
 			protocol = 'hls',
@@ -114,21 +131,20 @@ def MediaObjectsForURL(url):
 
 ####################################################################################################
 @indirect
-def PlayVideo(url):
-
-	#Split the URL to get the session_id & quality
-	session_id = url.split('&')[1]
-	quality = url.split('&')[2]
+def PlayVideo(url, quality):
 	
-	#Remove the Session ID and quality from the URL
+	#Split the URL to get the session_id
+	session_id = url.split('&')[1]
+	
+	#Remove the Session ID from the URL
 	url = url.split('&')[0]
 	
-	#Split the URL to get the media_id
-	media_id = url.split('-')[-1]
+	#Search the URL for a string of numbers 5 digits or longer. Most all media IDs are 6 digits. Going to search 1 digit lower just in case there is an older series out there using 4 digit media ids that i don't know about.
+	media_id = ''.join(re.findall(r'(\d{5,})',url))
 	
 	#Make the API call 
 	fields = "media.episode_number,media.name,media.description,media.url,media.stream_data"
-	options = {'session_id':session_id, 'version':API_VERSION, 'locale':API_LOCALE, 'media_id':media_id, 'fields':fields} 
+	options = {'session_id':session_id, 'version':API_VERSION, 'media_id':media_id, 'fields':fields} 
 	request = JSON.ObjectFromURL(API_URL+"/info.0.json", values=options, cacheTime=0, headers=API_HEADERS)
 	
 	if request['error'] is False:	
