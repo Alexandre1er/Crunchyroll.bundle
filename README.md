@@ -67,6 +67,9 @@ A: You can configure this on the Crunchyroll website. Go to your [Account Settin
 Changes
 =======
 v2.3.2
+* Update spoofed device
+
+v2.3.2
 * Minor changes
 
 v2.3.1
